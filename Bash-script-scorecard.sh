@@ -32,11 +32,25 @@ printf " You hit `expr $eno + $owt + $rth + $ouf + $vif + $xis + $ves + $gie + $
 printf " and `expr $ggq + $ggw + $gge + $ggr + $ggt + $ggy + $ggu + $ggi + $ggo` greens."
 printf " Congratulations!"
 read -p " Save to file? (y/n) " saveyorn
-if [ $saveyorn = "y" ]
-then
-read -p "Enter filename. " filename
-printf saved to $filename
-elif [ $saveyorn = "n" ]
-then
-exit
-fi
+case $saveyorn in # check user's input
+  "y")
+    read -p "Enter filename. " filename
+    if [ -f "$filename" ]; then # check if file exists
+      echo "Overwriting $filename. ^C to cancel."
+      sleep 1 # wait to see if user cancels
+      printf "Score: $(($one+$two+$thr+$fou+$fiv+$six+$sev+$eig+$nin))\n" > $filename # overwrite file
+      printf "Fairways hit: $(($eno+$owt+$rth+$ouf+$vif+$xis+$ves+$gie+$non))\n" >> $filename # append to file
+      printf "Greens hit: $(($ggq+$ggw+$gge+$ggr+$ggt+$ggy+$ggu+$ggi+$ggo))\n" >> $filename   # append to file
+      printf saved to $filename
+    else # if file doesn't exist
+      echo Error: file does not exist.
+      exit 3
+    fi
+  ;;
+  "n")
+    exit 1
+  *)
+    # if user's input is neither "y" nor "n"
+    echo Invalid option.
+    exit 2
+esac
